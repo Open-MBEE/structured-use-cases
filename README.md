@@ -2,185 +2,309 @@
 
 **A simpler, structured approach to use case modeling in SysML v2.**
 
-Structured Use Cases is an open-source SysML v2 library for describing system behavior using structured use case specifications composed of **scenarios and ordered steps**.
+Structured Use Cases is an open-source SysML v2 library for describing
+system behavior using structured use case specifications composed of
+**scenarios and ordered steps**.
 
-The goal is simple: make use cases easier to write, easier to understand, and more useful for **discovering requirements and generating behavioral tests**.
+The goal is simple: make use cases easier to write, easier to
+understand, and more useful for **discovering requirements, generating
+behavioral tests, and performing model-based analysis**.
+
+## Current Release --- v0.6
+
+Version 0.6 substantially revises the Structured Use Cases library to
+build on native SysML v2 semantics. Structured use cases specialize
+SysML v2 use cases, scenarios and steps use action semantics,
+preconditions and postconditions use constraint semantics, and semantic
+metadata identifies structured use case concepts without creating a
+parallel modeling language.
+
+The result is a lightweight library that preserves familiar structured
+use case concepts while making detailed behavioral information available
+for **requirements discovery, behavioral testing, model queries,
+automation, and AI-assisted engineering**.
+
+This repository includes:
+
+-   The current **Structured Use Cases proposal, v0.6**, in `docs/`
+-   The current **Structured Use Cases SysML v2 library** in `library/`
+-   A detailed **ATM structured use case** example
+-   A **reusable actor** connected to multiple use cases
+-   Examples of named **use-case-to-use-case connections**
 
 ## Why Structured Use Cases?
 
-The primary engineering value of use case modeling resides in the **use case specification**, not the use case diagram.
+The primary engineering value of use case modeling resides in the **use
+case specification**, not the use case diagram.
 
-A use case specification describes system behavior as a collection of scenarios:
+A use case specification describes system behavior as a collection of
+scenarios:
 
-- **Basic scenarios** describe normal behavior.
-- **Alternate scenarios** describe valid variations from the normal flow.
-- **Exception scenarios** describe error conditions and other off-nominal behavior.
+-   **Basic scenarios** describe normal behavior.
+-   **Alternate scenarios** describe valid variations from the normal
+    flow.
+-   **Exception scenarios** describe error conditions and other
+    off-nominal behavior.
 
-Explicitly modeling alternate and exception behavior helps expose requirements that can easily be missed when only nominal system behavior is considered.
+Explicitly modeling alternate and exception behavior helps expose
+requirements that can easily be missed when only nominal system behavior
+is considered.
 
-These structured scenarios also provide a natural foundation for systematic behavioral test generation.
+These structured scenarios also provide a natural foundation for
+systematic behavioral test generation.
 
 ## The Structured Use Case Model
 
-The Structured Use Cases library provides a structured representation of use case behavior in SysML v2.
-
-![Structured Use Cases SysML v2 Model](images/StructuredUseCases.jpg)
+The Structured Use Cases library provides a structured representation of
+use case behavior while building on native SysML v2 concepts rather than
+defining a parallel use case language.
 
 At the center of the model is a straightforward behavioral structure:
 
 **Use Case → Scenario → Step**
 
-A **Use Case** describes a system capability from the perspective of its actors.
+A structured use case is a SysML v2 use case. Scenarios and steps use
+SysML v2 action semantics, while preconditions and postconditions use
+constraint semantics. Semantic metadata identifies elements as
+structured use cases, basic scenarios, alternate scenarios, exception
+scenarios, steps, preconditions, postconditions, and use case actors.
 
-Each use case can contain:
+Each structured use case can contain:
 
-- One **Basic Scenario**
-- Zero or more **Alternate Scenarios**
-- Zero or more **Exception Scenarios**
+-   One **Basic Scenario**
+-   Zero or more **Alternate Scenarios**
+-   Zero or more **Exception Scenarios**
 
-Each scenario contains an ordered set of **Steps** describing observable behavior.
+Each scenario contains an ordered set of **Steps** describing behavior.
+Standard SysML v2 successions define behavioral ordering rather than
+duplicating control flow in custom library properties.
 
-Scenarios can also define their own **postconditions**, allowing different behavioral paths to terminate in different valid system states.
+Scenarios can define their own **postconditions**, allowing different
+behavioral paths to terminate in different valid system states.
 
-The model also represents actors and associations so that use cases can be organized into familiar use case diagrams.
+Human-readable scenario and step identifiers support familiar structured
+use case presentation while the underlying model retains explicit
+behavioral semantics.
 
 ## Why Alternate and Exception Scenarios Matter
 
-The normal path through a system is usually the easiest behavior to identify.
+The normal path through a system is usually the easiest behavior to
+identify.
 
 Many missing requirements are found by asking:
 
 **What else can happen?**
 
-Alternate scenarios describe legitimate variations in behavior. Exception scenarios describe failures and other off-nominal conditions.
+Alternate scenarios describe legitimate variations in behavior.
+Exception scenarios describe failures and other off-nominal conditions.
 
-Making these scenarios explicit helps engineers identify behavior that might otherwise remain unspecified until implementation or testing.
+Making these scenarios explicit helps engineers identify behavior that
+might otherwise remain unspecified until implementation or testing.
 
-This is one of the primary motivations behind Structured Use Cases: **use cases should help discover requirements, not merely document requirements that have already been found.**
+This is one of the primary motivations behind Structured Use Cases:
+**use cases should help discover requirements, not merely document
+requirements that have already been found.**
+
+Once off-nominal behavior is explicitly modeled, it can also support
+requirements extraction. For example, an **Authentication Failure**
+exception scenario can lead directly to a candidate requirement to
+**Handle Authentication Failure**, while the scenario remains the
+authoritative specification of the detailed behavior.
 
 ## Example: ATM Cash Withdrawal
 
-The ATM example demonstrates the Structured Use Cases concepts using familiar system behavior.
+The repository includes a detailed ATM example in:
 
-![ATM Structured Use Case Example](images/StructuredUseCases_ATM_Test.jpg)
+`examples/WithdrawCash_ATM_Example.sysml`
 
-The example includes the **Withdraw Cash** use case and ATM Customer actor, together with several possible scenarios.
+The **Withdraw Cash from ATM** use case demonstrates:
 
-For example:
+-   A basic successful-withdrawal scenario
+-   Alternate behavior such as cancelling a withdrawal or entering a
+    smaller amount
+-   Exception behavior such as authentication failure
+-   Ordered steps using SysML v2 successions
+-   Branch points represented by named successions
+-   Narrative rejoin steps
+-   A use-case-level precondition
+-   Scenario-specific postconditions
 
-- **Successful Withdrawal** represents the nominal behavior.
-- **Request Different Amount** represents an alternate path.
-- **Insufficient Funds** represents an exception path.
-
-Each scenario can have its own postcondition. For example, an insufficient-funds scenario can specify that no cash is dispensed and the account balance remains unchanged.
-
-This makes the expected outcome of each behavioral path explicit and testable.
+The example illustrates an important principle: a use case step does
+**not** need to be a system action. Steps can describe observable
+interaction involving the actor and the system, such as a customer
+inserting a card or entering a PIN.
 
 ## From Use Cases to Tests
 
 Structured use cases provide more than documentation.
 
-Because behavior is explicitly organized into scenarios and ordered steps, those scenarios can become the basis for behavioral test threads.
+Because behavior is explicitly organized into scenarios, steps,
+branches, rejoins, and outcomes, the model can be traversed to derive
+complete behavioral threads.
 
 The resulting engineering chain is:
 
-**Use Cases → Scenarios → Steps → Test Cases**
+**Use Cases → Scenarios → Steps → Behavioral Threads → Tests**
 
-Alternate and exception scenarios are particularly valuable because they expose the off-nominal behavior that frequently produces defects when it has not been specified or tested.
+Alternate and exception scenarios are particularly valuable because they
+expose off-nominal behavior that frequently produces defects when it has
+not been specified or tested.
 
-Scenario-specific postconditions also provide natural assertions for behavioral testing: after executing a scenario, the resulting system state can be checked against its expected postcondition.
+Scenario-specific postconditions also provide natural assertions for
+behavioral testing: after executing a behavioral thread, the resulting
+system state can be checked against the expected postcondition.
 
-## Library Validation
+The v0.6 proposal describes a conceptual **Use Case Thread Expander**
+that systematically traverses modeled use case behavior to identify the
+complete end-to-end threads that should be considered during testing.
 
-The repository includes smoke-test material used to exercise the Structured Use Cases library and verify that its major modeling elements can be instantiated.
+## Queryable Engineering Information
 
-The smoke test covers elements including:
+Once detailed use case behavior is represented as explicit model
+semantics rather than embedded only in prose, it becomes **queryable
+engineering information**.
 
-- Use Case Diagram
-- Use Case
-- Scenario
-- Step
-- Actor
-- Endpoint
-- Association
+Version 0.6 explores several immediately useful queries:
 
-The corresponding SysML v2 source and rendered model are included in the repository for developers and tool implementers who want to examine or validate the library.
+1.  **Find use cases with no alternate or exception scenarios.**
+2.  **Extract candidate requirements from off-nominal behavior.**
+3.  **Find scenarios without postconditions.**
+4.  **Expand a use case into its complete set of behavioral threads.**
+5.  **Trace requirements through use case behavior to verification.**
+
+These examples barely scratch the surface. The larger opportunity is
+that the same structured behavioral semantics can support queries,
+validation rules, automated transformations, AI agents, test generators,
+and other engineering tools without changing the underlying use case
+specification.
+
+## More Permissive Use Case Diagrams
+
+Structured Use Cases focuses engineering attention on the detailed
+specification without unnecessarily restricting familiar use case
+diagrams.
+
+The library provides a reusable `UseCaseActor` identified through
+semantic metadata rather than requiring the SysML v2 actor-parameter
+mechanism.
+
+The repository includes:
+
+`examples/ReusableActor_Example.sysml`
+
+This example demonstrates one reusable actor connected to multiple
+structured use cases.
+
+The repository also includes:
+
+`examples/UseCaseConnections_Example.sysml`
+
+This example demonstrates simple named connections between structured
+use cases, including:
+
+-   `include`
+-   `extend`
+-   `invoke`
+-   `precede`
+
+The intent is not to prescribe formal semantics for these relationship
+names. It is to demonstrate that structured use cases can participate in
+lightweight, familiar use case diagrams while their detailed behavioral
+specifications provide the primary engineering value.
 
 ## What's in This Repository?
 
 The repository contains:
 
-- The **Structured Use Cases SysML v2 library**
-- Structured use case examples
-- Basic, alternate, and exception scenario examples
-- SysML v2 source files
-- Rendered example models
-- Library smoke tests
-- Behavioral test-generation examples
-- Supporting documentation
-- The current Structured Use Cases proposal
+-   The **Structured Use Cases SysML v2 library**
+-   The current **v0.6 proposal**
+-   A detailed ATM structured use case example
+-   A reusable-actor example
+-   A use-case-connections example
+-   Supporting images and documentation
+-   Material supporting requirements discovery, behavioral testing, and
+    model-based analysis
 
 ## Getting Started
 
-1. Clone or download this repository.
-2. Review the Structured Use Cases library in the `library/StructuredUseCases.sysml`.
-3. Examine the rendered Structured Use Cases model above.
-4. Open the corresponding `.sysml` example to see its textual SysML v2 representation.
-5. Review the ATM example to see basic, alternate, and exception scenarios applied to a familiar problem.
-6. Review the smoke-test files if you want to validate the library in a SysML v2 environment.
-7. Create your own use case using a Basic Scenario and add Alternate and Exception Scenarios as needed.
+1.  Clone or download this repository.
+2.  Review `library/StructuredUseCases_Library.sysml`.
+3.  Open `examples/WithdrawCash_ATM_Example.sysml` to see a detailed
+    structured use case.
+4.  Review `examples/ReusableActor_Example.sysml` to see one actor
+    connected to multiple use cases.
+5.  Review `examples/UseCaseConnections_Example.sysml` to see named
+    connections between use cases.
+6.  Read the current v0.6 proposal in `docs/` for the motivation,
+    library design, testing approach, and query examples.
+7.  Create your own structured use case with a Basic Scenario, then ask
+    what alternate and exception behavior should also be modeled.
 
 ## Repository Structure
 
-```text
+``` text
 structured-use-cases/
 ├── README.md
 ├── LICENSE
 ├── library/
-│   └── StructuredUseCases.sysml
+│   └── StructuredUseCases_Library.sysml
 ├── examples/
-│   ├── StructuredUseCases_ATM_Test.sysml
-│   └── StructuredUseCases_SmokeTest.sysml
+│   ├── WithdrawCash_ATM_Example.sysml
+│   ├── ReusableActor_Example.sysml
+│   └── UseCaseConnections_Example.sysml
 ├── images/
-│   ├── StructuredUseCases.jpg
-│   ├── StructuredUseCases_ATM_Test.jpg
-│   └── StructuredUseCases_SmokeTest.jpg
 └── docs/
-    ├── Structured_Use_Cases_OMG_Proposal_Draft_v0.5.pdf
-    ├── StructuredUseCases_Test_Procedure.md
-    └── test case in UCML.txt
+    ├── Structured_Use_Cases_OMG_Proposal_Draft_v0.6.pdf
+    └── supporting documentation
 ```
 
 ## Design Philosophy
 
 Structured Use Cases is guided by several principles:
 
-- **Keep use case modeling simple.**
-- **Put behavioral detail in the specification.**
-- **Use diagrams primarily for organization, communication, and navigation.**
-- **Explicitly model alternate and exception behavior.**
-- **Use scenarios to discover missing requirements.**
-- **Make specifications directly useful for behavioral testing.**
-- **Improve the value-to-pain ratio of use case modeling.**
+-   **Keep use case modeling simple.**
+-   **Build on native SysML v2 semantics rather than creating a parallel
+    modeling language.**
+-   **Put behavioral detail in the specification.**
+-   **Use diagrams primarily for organization, communication, and
+    navigation.**
+-   **Explicitly model alternate and exception behavior.**
+-   **Use scenarios to discover missing requirements.**
+-   **Make specifications directly useful for behavioral testing.**
+-   **Make modeled behavior available for queries, automation, and
+    analysis.**
+-   **Improve the value-to-pain ratio of use case modeling.**
 
-The intent is not to reinvent structured use cases. Structured scenarios have been used successfully in industry for decades.
+The intent is not to reinvent structured use cases. Structured scenarios
+have been used successfully in industry for decades.
 
-The goal is to provide a simple, standard semantic representation suitable for the SysML v2 ecosystem.
+The goal is to provide a simple semantic representation suitable for the
+SysML v2 ecosystem while preserving the practical engineering value of
+detailed use case specifications.
 
 ## Project Status
 
-Structured Use Cases is currently under development and evaluation.
+Structured Use Cases is under active development and evaluation.
+
+Version 0.6 reflects substantial testing and refinement of the library
+architecture, including native SysML v2 use case and action semantics,
+semantic metadata, reusable actors, behavioral ordering with
+successions, scenario-specific postconditions, and permissive use case
+connections.
 
 The project provides a practical environment for:
 
-- Experimentation
-- Library validation
-- Tool interoperability testing
-- Development of examples
-- Behavioral test-generation experiments
-- Community feedback
+-   Library validation
+-   Tool interoperability testing
+-   Development of examples
+-   Requirements-discovery experiments
+-   Behavioral test-generation experiments
+-   Model queries and automation
+-   AI-assisted engineering experiments
+-   Community feedback
 
-The approach is also being developed as a proposal for the SysML v2 ecosystem.
+The approach is also being developed as a proposal for the SysML v2
+ecosystem.
 
 ## Contributing
 
@@ -188,14 +312,17 @@ Feedback and experimentation are welcome.
 
 Particularly useful contributions include:
 
-- Testing the library with different SysML v2 tools
-- Reporting interoperability issues
-- Contributing structured use case examples
-- Suggesting improvements to the library
-- Experimenting with behavioral test generation
-- Providing feedback on the Structured Use Cases proposal
+-   Testing the library with different SysML v2 tools
+-   Reporting interoperability issues
+-   Contributing structured use case examples
+-   Suggesting improvements to the library
+-   Experimenting with requirements discovery
+-   Experimenting with behavioral test generation
+-   Developing useful queries over structured use case models
+-   Providing feedback on the Structured Use Cases proposal
 
-Please use GitHub Issues to report problems, suggest improvements, or share results.
+Please use GitHub Issues to report problems, suggest improvements, or
+share results.
 
 ## License
 
@@ -203,8 +330,11 @@ See the `LICENSE` file for licensing information.
 
 ## About Structured Use Cases
 
-Structured Use Cases is an open-source effort to make use case modeling **simpler, more rigorous, and more useful throughout the systems and software engineering lifecycle**.
+Structured Use Cases is an open-source effort to make use case modeling
+**simpler, more rigorous, and more useful throughout the systems and
+software engineering lifecycle**.
 
 Its central idea is deliberately simple:
 
-**Describe what normally happens. Describe what else can happen. Describe what can go wrong. Then test all of it.**
+**Describe what normally happens. Describe what else can happen.
+Describe what can go wrong. Then test all of it.**
