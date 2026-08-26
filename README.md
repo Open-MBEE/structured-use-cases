@@ -117,6 +117,9 @@ The repository includes a detailed ATM example in:
 
 `examples/WithdrawCash_ATM_Example.sysml`
 
+![Withdraw Cash ATM structured use case
+example](images/WithdrawCash_ATM_Example.jpg)
+
 The **Withdraw Cash from ATM** use case demonstrates:
 
 -   A basic successful-withdrawal scenario
@@ -192,12 +195,18 @@ The repository includes:
 
 `examples/ReusableActor_Example.sysml`
 
+![Reusable actor connected to multiple structured use
+cases](images/ReusableActor_Example.jpg)
+
 This example demonstrates one reusable actor connected to multiple
 structured use cases.
 
 The repository also includes:
 
 `examples/UseCaseConnections_Example.sysml`
+
+![Named connections between structured use
+cases](images/UseCaseConnections_Example.jpg)
 
 This example demonstrates simple named connections between structured
 use cases, including:
