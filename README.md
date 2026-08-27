@@ -17,7 +17,7 @@ structured use case specifications. The companion **Structured Use Case
 Editor** provides an open-source reference editor for creating and
 editing structured use case diagrams and specifications.
 
-Editor: https://github.com/Open-MBEE/structured-use-case-editor
+Editor: https://github.com/Open-MBEE/structured-usecase-editor
 
 ## Current Release --- v0.6
 
