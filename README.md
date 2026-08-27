@@ -10,6 +10,15 @@ The goal is simple: make use cases easier to write, easier to
 understand, and more useful for **discovering requirements, generating
 behavioral tests, and performing model-based analysis**.
 
+## Companion Project
+
+The Structured Use Cases library defines the SysML v2 semantics for
+structured use case specifications. The companion **Structured Use Case
+Editor** provides an open-source reference editor for creating and
+editing structured use case diagrams and specifications.
+
+Editor: https://github.com/Open-MBEE/structured-use-case-editor
+
 ## Current Release --- v0.6
 
 Version 0.6 substantially revises the Structured Use Cases library to
@@ -58,6 +67,8 @@ systematic behavioral test generation.
 The Structured Use Cases library provides a structured representation of
 use case behavior while building on native SysML v2 concepts rather than
 defining a parallel use case language.
+
+![Structured Use Cases SysML v2 Model](images/StructuredUseCases.jpg)
 
 At the center of the model is a straightforward behavioral structure:
 
